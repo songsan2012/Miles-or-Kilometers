@@ -19,14 +19,22 @@ class ViewController: UIViewController {
     @IBOutlet weak var fiftyKLabel: UILabel!
     
     
-    @IBOutlet weak var useMeticStatus: UISwitch!
+    @IBOutlet weak var useMetricStatus: UISwitch!
     
-    let milesToKm = 1.6
-    let useMetric = true
+    let milesToKm = 1.60934
+    let kmToMiles = 0.62137119
+    
+    var useMetric = true
     
     var tenK = 10.0
     var marathon = 26.2
     var fiftyK = 50.0
+    
+    // -- Use these to hold the values
+    var tenKDistance = 0.0
+    var marathonDistance = 0.0
+    var fiftyKDistance = 0.0
+    
     
     // -- Notes
     // Marathon is set in miles
@@ -39,16 +47,6 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
-        // -- Set title
-//        if useMetric == true
-//        {
-//            titleLabel.text = kilometers
-//        }
-//        else
-//        {
-//            titleLabel.text = miles
-//        }
-        
         checkMetric()
         
     }
@@ -57,27 +55,52 @@ class ViewController: UIViewController {
     @IBAction func useMetricChanged(_ sender: Any) {
         
         // -- Check status of metric
-        
-        print("Use Metric changed")
-        
-//        if useMetric == false
-//        {
-//            titleLabel.text = "
-//        }
-        
+        checkMetric()
         
     }
     
     func checkMetric()
     {
-        if useMetric == true
+        if useMetricStatus.isOn == true
         {
             titleLabel.text = kilometers
+            useMetric = true
         }
         else
         {
             titleLabel.text = miles
+            useMetric = false
         }
+        
+        calculateKMToMiles()
+        
+    }
+    
+    func calculateKMToMiles()
+    {
+        // -- Update the distances
+        // -- false == use Miles; true == use kilometers
+        if useMetric == false
+        {
+            tenKDistance = tenK * kmToMiles
+            marathonDistance = marathon * 1
+            fiftyKDistance = fiftyK * kmToMiles
+        }
+        else {
+            marathonDistance = marathon * milesToKm
+            tenKDistance = tenK
+            fiftyKDistance = fiftyK
+        }
+        
+        // 10K
+        tenKLabel.text = String(tenKDistance)
+        
+        // -- Marathon in Miles
+        marathonLabel.text = String(marathonDistance)
+        
+        fiftyKLabel.text = String(fiftyKDistance)
+//        fiftyKLabel.text = String(format: "%.3f", fiftyKDistance)
+        
         
     }
     
